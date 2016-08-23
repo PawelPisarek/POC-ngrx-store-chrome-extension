@@ -17,43 +17,100 @@ export class NotesDataService {
     dataSource = new Subject<Note[]>();
     langMobile$ = this.dataSource.asObservable();
 
-    getNotes(): Observable<Array<Note>> {
+    list;
 
-        this.dataSource.next(this.getNotes2());
+    doNext() {
+
+        this.getNotes2().then(notes=> {
+            this.list = notes;
+        });
+    }
+
+    getNotes(): Observable<Array<Note>> {
+        this.dataSource.next(this.list); //stworzenie observable z rpc
         return this.langMobile$
 
             .map((response) => response);
     }
 
     addOrUpdateNote(note: Note): Observable<Note> {
-        console.log("tutaj jest ta notatka", note);
+        console.log("tutaj jest ta notatka", JSON.stringify(note));
 
-        return this.http.post(`${this.API_ROOT}/notes`, JSON.stringify(note), this.JSON_HEADER)
-            .map((response: Response) => response.json())
+        if (note.id == '123123') {
+            this.postNotes2(note);
+        } else {
+            console.log("ta funkca powinna wykonać sie raz ale się nie wykonuje");
+            this.editNote(note);
+        }
+        let dataSource = new Subject<Note>();
+        let langMobile$ = dataSource.asObservable();
+        return langMobile$;
+        // return this.http.post(`${this.API_ROOT}/notes`, JSON.stringify(note), this.JSON_HEADER)
+        //     .map((response: Response) => response.json())
     }
 
-    list = [];
 
-    getNotes2() {
-        Visualforce.remoting.Manager.invokeAction(getNotes,
+    postNotes2(data) {
+        let newMessage = this._window.createNote;
+        var jsonString = JSON.stringify(data);
+        Visualforce.remoting.Manager.invokeAction(newMessage, jsonString,
             (result, event) => {
                 if (event.status) {
-                    var parsedJson = JSON.parse(result);
-                    console.log(parsedJson);
-                    parsedJson.forEach(data=> {
-
-                        let exp = new NoteModel();
-                        this.list.push(exp);
-
-                    });
-                    console.log(this.list, 'asdsd');
+                    // this.expensesAdded.emit(0);
                 } else if (event.type === 'exception') {
-                    console.log('exception');
+
+                    console.log('Exception in Submitting Data');
+
                 } else {
+                    console.log('General Exception');
 
                 }
-            }, {escape: false})
-        return this.list;
+            })
+    }
+
+    editNote(data) {
+        let newMessage = this._window.editNote;
+        var jsonString = JSON.stringify(data);
+        Visualforce.remoting.Manager.invokeAction(newMessage, jsonString,
+            (result, event) => {
+                if (event.status) {
+                    // this.expensesAdded.emit(0);
+                } else if (event.type === 'exception') {
+
+                    console.log('Exception in Submitting Data');
+
+                } else {
+                    console.log('General Exception');
+
+                }
+            })
+    }
+
+    getNotes2() {
+        return new Promise((res, rej)=> {
+            let list = []
+            Visualforce.remoting.Manager.invokeAction(getNotes,
+                (result, event) => {
+                    if (event.status) {
+                        let parsedJson = JSON.parse(result);
+                        parsedJson.forEach(data => {
+
+
+                            let exp = new NoteModel(data.tekst__c, data.colour__c, data.left__c, data.top__c, data.Id, false);
+                            list.push(exp);
+
+                        });
+                        res(list);
+                    } else if (event.type === 'exception') {
+                        console.log('exception');
+                    } else {
+
+                    }
+                }, {escape: false})
+            return list;
+        });
+
+
     }
 
 

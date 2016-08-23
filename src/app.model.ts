@@ -8,14 +8,15 @@ export interface Note {
 }
 
 export interface AppState {
-  notes: Note[];
+    notes: Note[];
 }
 
 export class NoteModel {
-    text: string;
-    colour: string;
-    left: number;
-    top: number;
-    id: string;
-    dirty: boolean;
+    constructor(public text: string,
+                public colour: string,
+                public left: number,
+                public top: number,
+                public id: string,
+                public dirty: boolean) {
+    }
 }
