@@ -1,7 +1,9 @@
 #@ngrx example application
 połczenie ngrx/store z ładną konsolową wtyczką nie znalazłem działającego przykładu więc 23 sierpnia to działało mimo
 że w konsoli wywala bład  has no exported member 'ModuleWithProviders'.
+połączenie z sales force na podstawie
 
+https://github.com/TajNLD/angularvisualforcepart2
 
 
 Example application utilizing @ngrx libraries, showcasing common patterns and best practices. You can find the live app [here](http://ngrx.github.io/example-app/).
