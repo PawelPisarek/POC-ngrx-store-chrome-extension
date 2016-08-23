@@ -16,7 +16,7 @@ gulp.task('deploy',function(){
         .pipe(zip('package.zip'))
         .pipe(forceDeploy({
             username:'pawelpisarektest@pawelpisarektest.pl',
-            password:'',
+            password:'sasd',
             loginUrl:'https://c.eu11.visual.force.com',
             version:'36.0'
         }))
