@@ -2,7 +2,7 @@ import { bootstrap } from '@angular/platform-browser-dynamic';
 import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 import { disableDeprecatedForms, provideForms } from '@angular/forms';
 import { provideRouter, ROUTER_DIRECTIVES } from '@angular/router';
-import { PLATFORM_DIRECTIVES } from '@angular/core';
+import {PLATFORM_DIRECTIVES, provide} from '@angular/core';
 import { provideStore } from '@ngrx/store';
 import { provideDB } from '@ngrx/db';
 import { runEffects } from '@ngrx/effects';
@@ -29,6 +29,7 @@ bootstrap(App, [
    * Source: https://github.com/ngrx/store/blob/master/src/ng2.ts#L43-L69
    */
   provideStore({notes}, {notes:[]}),
+  provide(Window, { useValue: window }),
 
   /**
    * runEffects configures all providers for @ngrx/effects. Observables decorated
