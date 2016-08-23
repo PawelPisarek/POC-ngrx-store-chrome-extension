@@ -47,7 +47,6 @@ __build__/**
 #doc
 /doc
 
-gulpFile.js
 
 # IDE #
 .idea/
